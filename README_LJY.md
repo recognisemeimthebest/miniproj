@@ -53,3 +53,22 @@ radiomics_project/
     ├── radiomics_embed_128.npy        # Fusion 투입 파일
     └── radiomics_embed_128.csv        # 확인용
 ```
+
+## GitHub 브랜치 파일 구조 (feature/LJY)
+```
+feature/LJY/
+├── README_LJY.md              # 전체 파트 설명
+├── params.yaml                # 추출 설정
+├── extract.py                 # 특징 추출
+├── filter_features.py         # 상관 필터
+├── lasso.py                   # LASSO 변수 선택
+├── evaluate.py                # 성능 평가
+├── dim_radiomics.py           # 128dim 변환
+└── features/
+    ├── README.md              # features 폴더 설명
+    ├── radiomics_features.csv
+    ├── features_corr_filtered.csv
+    ├── final_features.csv
+    ├── radiomics_embed_128.npy
+    └── radiomics_embed_128.csv
+```
