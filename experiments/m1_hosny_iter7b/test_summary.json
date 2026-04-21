@@ -1,0 +1,30 @@
+{
+  "ckpt": "experiments\\m1_hosny_iter7b\\best.pt",
+  "val_auroc": 0.6508097165991904,
+  "val_n": 64,
+  "test_auroc": 0.4947368421052632,
+  "test_n": 63,
+  "test_accuracy": 0.5555555555555556,
+  "confusion_matrix": [
+    [
+      30,
+      8
+    ],
+    [
+      20,
+      5
+    ]
+  ],
+  "class0_precision_recall_f1": [
+    0.6,
+    0.7894736842105263,
+    0.6818181818181818
+  ],
+  "class1_precision_recall_f1": [
+    0.38461538461538464,
+    0.2,
+    0.2631578947368421
+  ],
+  "tta": true,
+  "threshold": 0.5
+}
