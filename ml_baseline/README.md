@@ -41,14 +41,14 @@ hist_squamous cell carcinoma nos, hist_unknown
 - **Cross-validation**: Stratified 5-Fold CV (AUC)
 - **지표**: ROC-AUC (주요), Accuracy, F1
 
-## 결과 (예시)
+## 결과 
 
 | 모델 | Test AUC | 5-CV AUC |
 |------|----------|----------|
-| Logistic Regression | ~0.59 | ~0.58 |
-| Random Forest | ~0.60 | ~0.57 |
-| **XGBoost** | **~0.618** | **~0.606** |
-| SVM | ~0.57 | ~0.56 |
+| Logistic Regression | 0.5500 | 0.5569 |
+| Random Forest | 0.4676 | 0.5235 |
+| **XGBoost** | **0.5938** | **0.5691** |
+| SVM | 0.4906 | 0.5323 |
 
 → XGBoost 단독 최고 성능, 임상 데이터만으로는 AUC 0.62 수준
 
