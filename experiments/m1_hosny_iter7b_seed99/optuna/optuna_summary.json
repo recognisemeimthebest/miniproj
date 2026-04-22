@@ -1,0 +1,23 @@
+{
+  "features_dir": "experiments\\m1_hosny_iter7b_seed99\\features",
+  "n_trials": 200,
+  "scaler": true,
+  "best_clf": "svm",
+  "best_params": {
+    "clf": "svm",
+    "svm_kernel": "linear",
+    "svm_C": 0.01287636625450139,
+    "svm_gamma": "scale",
+    "svm_cw": "balanced"
+  },
+  "best_val_auroc": 0.6214574898785424,
+  "final_val_auroc": 0.6214574898785424,
+  "final_test_auroc_trainonly": 0.6505263157894737,
+  "final_test_auroc_trainval_fit": 0.6305263157894737,
+  "per_clf_best_val_auroc": {
+    "xgboost": 0.569331983805668,
+    "logreg": 0.618421052631579,
+    "svm": 0.6214574898785424,
+    "rf": 0.561740890688259
+  }
+}

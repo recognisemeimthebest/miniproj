@@ -12,6 +12,13 @@ metadata.zip
 !experiments/m1_hosny_iter7b_seed7/test_predictions.csv
 !experiments/m1_hosny_iter7b_seed99/test_predictions.csv
 !experiments/m1_hosny_iter7b_seed123/test_predictions.csv
+!experiments/m1_hosny_iter7b/optuna/test_predictions_optuna.csv
+!experiments/m1_hosny_iter7b_seed7/optuna/test_predictions_optuna.csv
+!experiments/m1_hosny_iter7b_seed99/optuna/test_predictions_optuna.csv
+!experiments/m1_hosny_iter7b_seed123/optuna/test_predictions_optuna.csv
+!experiments/m1_hosny_iter7b_seed99/optuna_mlp/test_predictions_optuna_mlp.csv
+!experiments/single_modal/clinical/test_predictions.csv
+!experiments/single_modal/radiomics/test_predictions.csv
 !results/gradcam_iou.csv
 
 # 전처리 결과물 / MONAI PersistentDataset 캐시 (재현 가능, 수백 GB)
@@ -29,6 +36,7 @@ experiments/m1_hosny_iter7_ema_bug*/
 experiments/m1_hosny_iter7_killed_cachebloat*/
 experiments/smoke*/
 experiments/*.log
+experiments/iterations_log.json
 
 # history.json은 훈련시마다 재생성되므로 제외
 experiments/*/history.json
@@ -56,6 +64,7 @@ notebooks/
 app/
 scripts/
 configs/
+web/
 
 # Grad-CAM 3D heatmap NIfTI (용량 크고 재현 가능)
 results/gradcam/
@@ -82,3 +91,8 @@ Thumbs.db
 !double_model/**
 !triple_model/
 !triple_model/**
+
+# …but still exclude pycache inside re-included baseline folders
+single_modal_baseline/**/__pycache__/
+double_model/**/__pycache__/
+triple_model/**/__pycache__/

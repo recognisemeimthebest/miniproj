@@ -1,0 +1,62 @@
+{
+  "split": {
+    "train": 293,
+    "val": 64,
+    "test": 63,
+    "source": "LJW seed99"
+  },
+  "modalities": {
+    "clinical": {
+      "input_dim": 11,
+      "best_params": {
+        "hidden_dim": 256,
+        "embed_dim": 32,
+        "dropout": 0.19179259076908656,
+        "lr": 0.007657130105893458,
+        "batch_size": 16,
+        "weight_decay": 1.464185316807499e-05,
+        "epochs": 97
+      },
+      "optuna_best_val_auroc": 0.6568825910931173,
+      "val_auroc_trainonly": 0.6568825910931173,
+      "test_auroc_trainonly": 0.5484210526315789,
+      "test_auroc_trainval": 0.5794736842105263
+    },
+    "radiomics": {
+      "input_dim": 15,
+      "best_params": {
+        "hidden_dim": 128,
+        "embed_dim": 256,
+        "dropout": 0.24914615819050775,
+        "lr": 0.005511842917194678,
+        "weight_decay": 4.099568074182095e-06,
+        "batch_size": 16,
+        "epochs": 54
+      },
+      "optuna_best_val_auroc": 0.72165991902834,
+      "val_auroc_trainonly": 0.72165991902834,
+      "test_auroc_trainonly": 0.6126315789473684,
+      "test_auroc_trainval": 0.5452631578947369
+    },
+    "ct": {
+      "input_dim": 256,
+      "best_params": {
+        "n_hidden": 1,
+        "hidden_dim": 32,
+        "dropout": 0.46915818001576876,
+        "use_bn": false,
+        "lr": 0.0030765796652495025,
+        "weight_decay": 3.329025151526907e-06,
+        "epochs": 159,
+        "batch_size": 16,
+        "label_smoothing": 0.04102245812463627,
+        "class_weight": null
+      },
+      "optuna_best_val_auroc": 0.6548582995951417,
+      "val_auroc_trainonly": 0.611336032388664,
+      "test_auroc_trainonly": 0.5547368421052632,
+      "test_auroc_trainval": 0.6336842105263158,
+      "note": "Feature input = 256-dim from LJW seed99 3D CNN encoder (best.pt)"
+    }
+  }
+}

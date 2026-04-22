@@ -1,0 +1,22 @@
+{
+  "features_dir": "experiments\\m1_hosny_iter7b\\features",
+  "n_trials": 200,
+  "scaler": true,
+  "best_clf": "logreg",
+  "best_params": {
+    "clf": "logreg",
+    "lr_penalty": "l1",
+    "lr_C": 13.049363189184593,
+    "lr_class_weight": "balanced"
+  },
+  "best_val_auroc": 0.6497975708502024,
+  "final_val_auroc": 0.6497975708502024,
+  "final_test_auroc_trainonly": 0.5536842105263158,
+  "final_test_auroc_trainval_fit": 0.5494736842105263,
+  "per_clf_best_val_auroc": {
+    "xgboost": 0.48279352226720645,
+    "logreg": 0.6497975708502024,
+    "svm": 0.5708502024291497,
+    "rf": 0.46255060728744934
+  }
+}
