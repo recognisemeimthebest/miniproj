@@ -1,0 +1,23 @@
+{
+  "ckpt": "experiments\\m1_hosny_iter7b_seed99\\best.pt",
+  "features_dir": "experiments\\m1_hosny_iter7b_seed99\\features",
+  "seed": 99,
+  "n_trials": 200,
+  "scaler": true,
+  "best_val_auroc": 0.6548582995951417,
+  "best_params": {
+    "n_hidden": 1,
+    "hidden_dim": 32,
+    "dropout": 0.46915818001576876,
+    "use_bn": false,
+    "lr": 0.0030765796652495025,
+    "weight_decay": 3.329025151526907e-06,
+    "epochs": 159,
+    "batch_size": 16,
+    "label_smoothing": 0.04102245812463627,
+    "class_weight": null
+  },
+  "final_val_auroc_trainonly": 0.611336032388664,
+  "final_test_auroc_trainonly": 0.5547368421052632,
+  "final_test_auroc_trainval": 0.6336842105263158
+}

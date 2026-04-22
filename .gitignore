@@ -59,3 +59,9 @@ configs/
 # OS
 .DS_Store
 Thumbs.db
+
+# single_modal_baseline/ is fully tracked (team-visible single-modal baseline:
+# scripts + data csv + weights + results csv + figures). Re-includes files
+# that would otherwise be blocked by *.csv and scripts/ rules above.
+!single_modal_baseline/
+!single_modal_baseline/**
