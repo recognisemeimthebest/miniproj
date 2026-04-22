@@ -12,6 +12,7 @@ metadata.zip
 !experiments/m1_hosny_iter7b_seed7/test_predictions.csv
 !experiments/m1_hosny_iter7b_seed99/test_predictions.csv
 !experiments/m1_hosny_iter7b_seed123/test_predictions.csv
+!results/gradcam_iou.csv
 
 # 전처리 결과물 / MONAI PersistentDataset 캐시 (재현 가능, 수백 GB)
 output_clinical/
@@ -55,6 +56,17 @@ notebooks/
 app/
 scripts/
 configs/
+
+# Grad-CAM 3D heatmap NIfTI (용량 크고 재현 가능)
+results/gradcam/
+# Grad-CAM 중간 iter 오버레이 (최종 iter5 + 히스토그램만 commit)
+figures/gradcam_overlays/
+figures/gradcam_overlays_iter0_demo/
+figures/gradcam_overlays_iter1/
+figures/gradcam_overlays_iter2/
+figures/gradcam_overlays_iter3/
+figures/gradcam_overlays_iter4/
+figures/gradcam_overlays_iter5_demo/
 
 # OS
 .DS_Store

@@ -1,0 +1,4 @@
+Grad-CAM quantitative evaluation (Test n=63)
+  IoU@25%       mean=0.219  std=0.068  n=63
+  IoU@50%       mean=0.367  std=0.146  n=63
+  Pointing-game rate=0.270  n_hit=17/63
