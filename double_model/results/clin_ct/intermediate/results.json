@@ -1,0 +1,48 @@
+{
+  "modalities": [
+    "clinical",
+    "ct"
+  ],
+  "n_modalities": 2,
+  "dim_a": 32,
+  "dim_b": 256,
+  "concat_dim": 288,
+  "encoder_source": "single_modal_baseline train-only encoders (frozen)",
+  "best_params": {
+    "n_hidden": 1,
+    "hidden_dim": 256,
+    "dropout": 0.25267071520801987,
+    "lr": 0.001108592608662462,
+    "weight_decay": 4.154492453108906e-06,
+    "batch_size": 64,
+    "epochs": 97
+  },
+  "optuna_best_val_auroc": 0.667004048582996,
+  "val_auroc_trainonly": 0.667004048582996,
+  "test_auroc_trainonly": 0.5789473684210527,
+  "test_auroc_trainval": 0.6094736842105264,
+  "test_metrics_trainval": {
+    "auroc": 0.6094736842105264,
+    "accuracy": 0.6031746031746031,
+    "confusion_matrix": [
+      [
+        26,
+        12
+      ],
+      [
+        13,
+        12
+      ]
+    ],
+    "class0_prf": [
+      0.6666666666666666,
+      0.6842105263157895,
+      0.6753246753246753
+    ],
+    "class1_prf": [
+      0.5,
+      0.48,
+      0.4897959183673469
+    ]
+  }
+}

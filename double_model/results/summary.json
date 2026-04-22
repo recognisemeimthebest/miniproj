@@ -72,5 +72,157 @@
     "clinical": 0.5795,
     "radiomics": 0.5453,
     "ct": 0.6337
+  },
+  "intermediate_fusion": {
+    "method": "frozen_concat_mlp_head",
+    "encoder_source": "single_modal_baseline train-only encoders (frozen)",
+    "head_optuna_trials_per_pair": 30,
+    "threshold": 0.5,
+    "pairs": {
+      "clin_rad": {
+        "modalities": [
+          "clinical",
+          "radiomics"
+        ],
+        "n_modalities": 2,
+        "dim_a": 32,
+        "dim_b": 256,
+        "concat_dim": 288,
+        "encoder_source": "single_modal_baseline train-only encoders (frozen)",
+        "best_params": {
+          "n_hidden": 1,
+          "hidden_dim": 32,
+          "dropout": 0.12364323277366746,
+          "lr": 0.0016127704028924125,
+          "weight_decay": 8.121029381018616e-05,
+          "batch_size": 16,
+          "epochs": 107
+        },
+        "optuna_best_val_auroc": 0.7196356275303644,
+        "val_auroc_trainonly": 0.7196356275303644,
+        "test_auroc_trainonly": 0.5978947368421053,
+        "test_auroc_trainval": 0.5947368421052632,
+        "test_metrics_trainval": {
+          "auroc": 0.5947368421052632,
+          "accuracy": 0.5555555555555556,
+          "confusion_matrix": [
+            [
+              24,
+              14
+            ],
+            [
+              14,
+              11
+            ]
+          ],
+          "class0_prf": [
+            0.631578947368421,
+            0.631578947368421,
+            0.631578947368421
+          ],
+          "class1_prf": [
+            0.44,
+            0.44,
+            0.44
+          ]
+        }
+      },
+      "clin_ct": {
+        "modalities": [
+          "clinical",
+          "ct"
+        ],
+        "n_modalities": 2,
+        "dim_a": 32,
+        "dim_b": 256,
+        "concat_dim": 288,
+        "encoder_source": "single_modal_baseline train-only encoders (frozen)",
+        "best_params": {
+          "n_hidden": 1,
+          "hidden_dim": 256,
+          "dropout": 0.25267071520801987,
+          "lr": 0.001108592608662462,
+          "weight_decay": 4.154492453108906e-06,
+          "batch_size": 64,
+          "epochs": 97
+        },
+        "optuna_best_val_auroc": 0.667004048582996,
+        "val_auroc_trainonly": 0.667004048582996,
+        "test_auroc_trainonly": 0.5789473684210527,
+        "test_auroc_trainval": 0.6094736842105264,
+        "test_metrics_trainval": {
+          "auroc": 0.6094736842105264,
+          "accuracy": 0.6031746031746031,
+          "confusion_matrix": [
+            [
+              26,
+              12
+            ],
+            [
+              13,
+              12
+            ]
+          ],
+          "class0_prf": [
+            0.6666666666666666,
+            0.6842105263157895,
+            0.6753246753246753
+          ],
+          "class1_prf": [
+            0.5,
+            0.48,
+            0.4897959183673469
+          ]
+        }
+      },
+      "rad_ct": {
+        "modalities": [
+          "radiomics",
+          "ct"
+        ],
+        "n_modalities": 2,
+        "dim_a": 256,
+        "dim_b": 256,
+        "concat_dim": 512,
+        "encoder_source": "single_modal_baseline train-only encoders (frozen)",
+        "best_params": {
+          "n_hidden": 1,
+          "hidden_dim": 64,
+          "dropout": 0.27883614333296614,
+          "lr": 0.005784339175054577,
+          "weight_decay": 1.0099165713146805e-06,
+          "batch_size": 16,
+          "epochs": 100
+        },
+        "optuna_best_val_auroc": 0.757085020242915,
+        "val_auroc_trainonly": 0.757085020242915,
+        "test_auroc_trainonly": 0.5821052631578947,
+        "test_auroc_trainval": 0.61,
+        "test_metrics_trainval": {
+          "auroc": 0.61,
+          "accuracy": 0.5714285714285714,
+          "confusion_matrix": [
+            [
+              18,
+              20
+            ],
+            [
+              7,
+              18
+            ]
+          ],
+          "class0_prf": [
+            0.72,
+            0.47368421052631576,
+            0.5714285714285714
+          ],
+          "class1_prf": [
+            0.47368421052631576,
+            0.72,
+            0.5714285714285714
+          ]
+        }
+      }
+    }
   }
 }

@@ -1,10 +1,13 @@
-# double_model — 2-modal late fusion
+# double_model — 2-modal fusion (late + intermediate)
 
-`single_modal_baseline/` 의 각 모달 test 확률을 입력으로,
-**두 모달씩 조합한 3쌍**에 대해 **late fusion (확률 평균)** 을 평가한 폴더입니다.
+`single_modal_baseline/` 을 기반으로 **두 모달씩 조합한 3쌍** (clin+rad, clin+ct, rad+ct)
+에 대해 두 가지 fusion 전략을 돌리고 결과를 같이 기록한 폴더입니다.
 
-다음 단계(`triple_model/` 에서 세 모달 합치는 실험)와 **직접 비교 가능한 스키마**로
-결과를 기록하는 것이 1차 목적이므로, 실험 조건을 **최대한 단순**하게 고정했습니다.
+1. **Late fusion** (prob-level, equal weight, arithmetic / logit mean) — 즉시 계산
+2. **Intermediate fusion** (frozen encoder + concat + MLP head, Optuna-tuned) — head 만 학습
+
+다음 단계 `triple_model/` 에서 **세 모달 전체**를 같은 두 전략으로 돌려서
+`single → double → triple` 개선 폭을 직접 비교할 수 있도록 스키마를 통일했습니다.
 
 ---
 
@@ -12,37 +15,54 @@
 
 - single_modal_baseline 의 단일 모달 AUROC (`clin=0.580, rad=0.545, ct=0.634`) 대비
   **두 모달 조합이 상보적 신호를 주는지** 확인.
-- triple fusion 에서 같은 평가 프로토콜을 재사용하여
-  `single → double → triple` 차이를 한눈에 보도록 **스키마를 통일**.
+- fusion 전략 2종 (late, intermediate) 에 대해 상한을 각각 보여서 triple 에서
+  어떤 전략을 집중해야 할지 방향을 잡음.
 
 ---
 
 ## 실험 설계 (요약)
 
-| 항목 | 값 |
-|---|---|
-| Split | LJW seed99 **293 / 64 / 63** (label-stratified) — single_modal_baseline 과 동일 |
-| 입력 확률 | single_modal_baseline 의 **train+val retrain** test 예측 (headline 일치) |
-| 조합 | `clin_rad`, `clin_ct`, `rad_ct` (3 pair) |
-| 가중치 | **equal weight (0.5, 0.5)** — val 튜닝 없이 honest baseline |
-| 평균 방식 | (A) **arithmetic**: `(p_A + p_B) / 2` <br>(B) **logit**: `σ((logit p_A + logit p_B) / 2)` |
-| Threshold | 0.5 (single_modal_baseline 와 동일) |
-| Seed | 계산 결정론적 — pure arithmetic on saved probs, 별도 seed 없음 |
+| 항목 | Late fusion | Intermediate fusion |
+|---|---|---|
+| Split | LJW seed99 **293 / 64 / 63** (동일) | 동일 |
+| 입력 | single_modal_baseline 의 `prob_trainval` (test CSV) | single_modal_baseline 의 **train-only encoder** embedding |
+| 모달 연결 위치 | 확률 (1-dim × 2) | embedding (D_A + D_B dim) |
+| 학습 파라미터 | 없음 (평균만) | FusionHead MLP만 (encoder 는 freeze) |
+| 튜닝 | 없음 (equal weight) | Optuna 30 trials, val AUROC 최대화 |
+| Threshold | 0.5 | 0.5 |
+| Seed | — | 99 (모델 init + Optuna sampler) |
 
-왜 val 로 weight 튜닝을 안 했나:
-- 확률 재사용(이미 trainval 재학습된 값)으로 val 은 이미 학습에 포함됨 → val 에서 weight 를
-  고르면 leakage.
-- 엄밀한 weight 튜닝은 train-only 모델의 val 예측을 새로 뽑아야 가능 (향후 작업으로 보류).
+**Intermediate 의 encoder 가 train-only 인 이유**
+: trainval encoder 는 val 로 학습되었기 때문에, 그걸로 val embedding 을 뽑으면
+  Optuna 가 val AUROC 를 올리는 과정에서 encoder 의 val 정보가 누수됨.
+  Train-only encoder 는 val 을 한 번도 안 봤으므로 val 이 honest 한 eval 이 됨.
+  단점: 최종 trainval 재학습에서도 encoder 는 train-only 로 고정 → baseline 의
+  trainval 재학습(end-to-end) 보다 encoder 가 약할 수 있음. 그래도 헤드가 더
+  자유롭게 조합할 수 있는 구조적 이점이 더 크다고 판단.
+
+**Intermediate FusionHead 구조**
+```
+concat(emb_A, emb_B) → [Linear → ReLU → Dropout] * n_hidden → Linear(1)
+```
+Optuna 탐색 공간:
+- `n_hidden` ∈ {1, 2}
+- `hidden_dim` ∈ {32, 64, 128, 256}
+- `dropout` ∈ [0.1, 0.5]
+- `lr` log-uniform [1e-4, 1e-2]
+- `weight_decay` log-uniform [1e-6, 1e-3]
+- `batch_size` ∈ {16, 32, 64}
+- `epochs` ∈ [30, 120]
+- Loss: `BCEWithLogitsLoss(pos_weight=neg/pos)` (clinical/radiomics 와 동일)
 
 ---
 
 ## 결과 (test n=63)
 
-| Pair     | modalities            | Arithmetic AUROC | Logit AUROC | vs best single |
-|----------|-----------------------|------------------|-------------|----------------|
-| clin_rad | clinical + radiomics  | 0.5653           | 0.5674      | clin 0.5795 ↓  |
-| clin_ct  | clinical + ct         | **0.6274**       | 0.6168      | ct 0.6337 ↓    |
-| rad_ct   | radiomics + ct        | 0.5821           | 0.5516      | ct 0.6337 ↓    |
+| Pair     | input_dim | Late arith | Late logit | **Intermediate (headline)** | Optuna val (inter) |
+|----------|-----------|------------|------------|------------------------------|---------------------|
+| clin_rad | 32+256=288| 0.5653     | 0.5674     | **0.5947**                   | 0.7196             |
+| clin_ct  | 32+256=288| 0.6274     | 0.6168     | 0.6095                       | 0.6670             |
+| rad_ct   | 256+256=512| 0.5821    | 0.5516     | **0.6100**                   | 0.7571             |
 
 Single-modal 참고 (train+val retrain test AUROC):
 - clinical : 0.5795
@@ -50,18 +70,22 @@ Single-modal 참고 (train+val retrain test AUROC):
 - **ct      : 0.6337 ← 현 최강 단독**
 
 관찰:
-- **어떤 pair 도 CT 단독(0.634)을 못 넘음.** Equal-weight 로 약한 신호(clin/rad)가 CT 를
-  오히려 희석시키는 전형적 현상.
-- `clin_ct` 가 그나마 CT 에 근접(0.627) — clinical 이 CT 를 크게 망치지는 않음.
-- `clin_rad` 는 단일 clinical(0.580) 보다도 아래 → 두 모달이 비슷한 방향의 오류를 공유.
-- Arithmetic vs Logit: 큰 차이 없음 (max Δ ≈ 0.03). 극단 확률이 많지 않은 test set.
+- **어떤 fusion pair 도 CT 단독(0.634)을 아직 못 넘음.** 그래도 intermediate 가 late 대비
+  `clin_rad` (+0.029) 와 `rad_ct` (+0.028) 에서 개선.
+- `clin_ct` 는 예외적으로 late (0.627) 가 intermediate (0.610) 보다 더 좋음 →
+  clinical 의 32-dim embedding 이 CT 의 256-dim 신호를 head 에서 희석시킨 듯.
+  → triple 에서도 clinical embed_dim 을 키우는(예: 64 또는 128) 재튜닝 고려 여지.
+- Optuna val 과 test trainval 의 gap 이 0.1+ → val 에 살짝 과적합. n=64 의 한계.
+- Intermediate 를 2/3 pair 에서 본 개선(~0.03) 이 "intermediate fusion 의 기대이득 +0.03~0.05"
+  예상치와 대체로 일치.
 
 시사점:
-- 단순 equal-weight late fusion 만으로는 여기서 이득 없음 →
-  (1) CT 쪽에 더 큰 가중치 주는 weighted late fusion, 또는
-  (2) embedding 레벨에서 합치는 intermediate fusion (concat + MLP) 이 필요.
-- **triple fusion** 에서도 equal-weight 만 쓰면 비슷한 한계가 예상되므로, 이 숫자들을
-  삼중 결과와 비교해서 "3 모달을 전부 쓰는 게 정말 도움이 되는가" 를 판단할 근거로 사용.
+- 현재 규모(train 293, val 64)에서는 **intermediate fusion 만으로 CT 단독을 큰 폭 초과하기
+  는 힘듦**. triple 에서 세 모달 동시 사용 + 같은 Optuna 튜닝이 현실적 다음 단계.
+- 추후 개선안:
+  - weighted late fusion (val 에서 w 를 grid search, train-only 모델의 val 예측 필요)
+  - gated / attention fusion
+  - end-to-end 재학습 (encoder 까지 같이 훈련) — 과적합 위험 큼
 
 ---
 
@@ -69,21 +93,28 @@ Single-modal 참고 (train+val retrain test AUROC):
 
 ```
 double_model/
-├─ README.md               ← 이 파일
+├─ README.md
 ├─ scripts/
-│  ├─ late_fusion.py       3 pair × (arith, logit) 계산, summary.json 출력
-│  └─ visualize.py         bar / ROC / confusion matrix 3종 플롯
+│  ├─ late_fusion.py           3 pair × (arith, logit) 확률 평균
+│  ├─ intermediate_fusion.py   frozen encoder → concat → Optuna-tuned MLP head
+│  └─ visualize.py             bar (late arith/logit + intermediate) / ROC / CM
+├─ embeddings/                 intermediate 시 캐시된 train-only encoder embeddings
+│  └─ {clinical,radiomics,ct}_{train,val,test}.npz   (emb, y, pids)
 ├─ results/
 │  ├─ clin_rad/
-│  │  ├─ predictions_arithmetic.csv   (pid, y_true, prob_A, prob_B, prob_fused, pred@0.5)
-│  │  └─ predictions_logit.csv
-│  ├─ clin_ct/   (동일 구조)
-│  ├─ rad_ct/    (동일 구조)
-│  └─ summary.json         triple fusion 이 같은 스키마로 붙일 수 있는 형태
+│  │  ├─ predictions_arithmetic.csv   (late, equal weight)
+│  │  ├─ predictions_logit.csv        (late, equal weight)
+│  │  └─ intermediate/
+│  │     ├─ best.pt                   (trainonly + trainval FusionHead state dicts)
+│  │     ├─ test_predictions.csv      (prob_trainonly, prob_trainval, pred@0.5)
+│  │     └─ results.json              (best params, val/test AUROC, metrics)
+│  ├─ clin_ct/    (동일 구조)
+│  ├─ rad_ct/     (동일 구조)
+│  └─ summary.json                    late + intermediate 통합
 └─ figures/
-   ├─ comparison_bar.png   3 pair × 2 rule + 3 single baseline lines
-   ├─ roc_curves.png       pair 3 (실선) + single 3 (점선) overlay
-   └─ confusion_matrices.png   1×3 pair CM (arithmetic, threshold=0.5)
+   ├─ comparison_bar.png               pair × (late arith / late logit / inter) + single 앵커
+   ├─ roc_curves.png                   pair best ROC + single ROC overlay
+   └─ confusion_matrices.png           intermediate 기준 1x3 CM (threshold=0.5)
 ```
 
 ---
@@ -91,13 +122,21 @@ double_model/
 ## 재현
 
 ```bash
-# single_modal_baseline/ 결과가 이미 있어야 함 (test_predictions CSV 들)
-python double_model/scripts/late_fusion.py    # → results/ 채우고 표 출력
-python double_model/scripts/visualize.py      # → figures/ 3장
+# single_modal_baseline/ 의 best.pt + features/*.npz 가 있어야 함
+
+# 1) Late fusion (수초)
+python double_model/scripts/late_fusion.py
+
+# 2) Intermediate fusion — Optuna 30 trials × 3 pair (GPU 기준 2~3분)
+python double_model/scripts/intermediate_fusion.py --n-trials 30
+
+# 3) Figures
+python double_model/scripts/visualize.py
 ```
 
-두 스크립트 모두 이 폴더 기준 상대 경로 + `../single_modal_baseline/results/` 참조.
-추가 모델 훈련 없이 확률 CSV 연산만 수행하므로 몇 초면 끝남.
+Intermediate 쪽은 `single_modal_baseline/scripts/` 의 `ClinicalBranch` / `RadiomicsMLP` 클래스
++ `common_split.load_split_pids` 를 import 하므로 single_modal_baseline 폴더가 repo 에 같이
+있어야 동작 (경로: `../single_modal_baseline/`).
 
 ---
 
@@ -106,12 +145,15 @@ python double_model/scripts/visualize.py      # → figures/ 3장
 (나중에 세 모달 합칠 때 이 폴더와 1:1 비교 가능하도록 동일하게 남기면 좋음)
 
 - `split`: 293/64/63 (동일 사용 — seed99)
-- `source_probs`: 어떤 확률을 썼는지 (train+val retrain / train-only / encoder embedding)
-- `method`: late / intermediate / early, weight scheme
+- `encoder_source`: train-only / trainval / joint (어떤 버전을 썼는지)
+- `method`: late (arith/logit/weighted) / intermediate (frozen concat + MLP) / early / joint
 - `modalities`: 항상 `["clinical","radiomics","ct"]` 순서
-- `test_auroc`: arithmetic / logit / weighted / trained-head 등 변형별
-- `single_modal_reference_test_auroc_trainval`: 비교 앵커 숫자 (위 표의 3개)
-- `double_model_reference_test_auroc`: 이 폴더 `clin_ct=0.6274` 같은 상한 체크 숫자
+- `test_auroc_trainval`: headline (이 폴더와 1:1 비교)
+- `optuna_best_val_auroc`: val side (과적합 여부 확인용)
+- 앵커 숫자:
+  - single best (CT) : **0.6337**
+  - double best (현재 intermediate rad_ct) : **0.6100**
+  - triple 목표 : > 0.6337 (CT 단독 초과) 가 의미 있는 결과
 
 이 규약을 유지하면 `summary.json` 세 개(single / double / triple) 를 한 스크립트로
 읽어 통합 bar chart 를 그릴 수 있습니다.
