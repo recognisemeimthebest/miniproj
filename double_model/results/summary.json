@@ -1,0 +1,76 @@
+{
+  "split": {
+    "train": 293,
+    "val": 64,
+    "test": 63,
+    "source": "LJW seed99"
+  },
+  "method": "late_fusion_equal_weight",
+  "source_probs": "single_modal_baseline train+val retrain (headline)",
+  "averaging_rules": [
+    "arithmetic",
+    "logit"
+  ],
+  "threshold": 0.5,
+  "pairs": {
+    "clin_rad": {
+      "modalities": [
+        "clinical",
+        "radiomics"
+      ],
+      "n_modalities": 2,
+      "weights": {
+        "clinical": 0.5,
+        "radiomics": 0.5
+      },
+      "source_probs": "train+val retrain",
+      "arithmetic_mean": {
+        "test_auroc": 0.5652631578947369
+      },
+      "logit_mean": {
+        "test_auroc": 0.5673684210526315
+      }
+    },
+    "clin_ct": {
+      "modalities": [
+        "clinical",
+        "ct"
+      ],
+      "n_modalities": 2,
+      "weights": {
+        "clinical": 0.5,
+        "ct": 0.5
+      },
+      "source_probs": "train+val retrain",
+      "arithmetic_mean": {
+        "test_auroc": 0.6273684210526316
+      },
+      "logit_mean": {
+        "test_auroc": 0.616842105263158
+      }
+    },
+    "rad_ct": {
+      "modalities": [
+        "radiomics",
+        "ct"
+      ],
+      "n_modalities": 2,
+      "weights": {
+        "radiomics": 0.5,
+        "ct": 0.5
+      },
+      "source_probs": "train+val retrain",
+      "arithmetic_mean": {
+        "test_auroc": 0.5821052631578948
+      },
+      "logit_mean": {
+        "test_auroc": 0.551578947368421
+      }
+    }
+  },
+  "single_modal_reference_test_auroc_trainval": {
+    "clinical": 0.5795,
+    "radiomics": 0.5453,
+    "ct": 0.6337
+  }
+}

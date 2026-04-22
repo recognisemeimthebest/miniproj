@@ -60,8 +60,11 @@ configs/
 .DS_Store
 Thumbs.db
 
-# single_modal_baseline/ is fully tracked (team-visible single-modal baseline:
-# scripts + data csv + weights + results csv + figures). Re-includes files
-# that would otherwise be blocked by *.csv and scripts/ rules above.
+# Team-visible baseline folders are fully tracked (scripts + csv + weights +
+# predictions + figures). Re-includes files otherwise blocked by *.csv and
+# scripts/ rules above. Add new experiment folders here as the pipeline grows
+# (e.g. triple_model/).
 !single_modal_baseline/
 !single_modal_baseline/**
+!double_model/
+!double_model/**
