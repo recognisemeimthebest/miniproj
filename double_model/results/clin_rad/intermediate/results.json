@@ -4,45 +4,45 @@
     "radiomics"
   ],
   "n_modalities": 2,
-  "dim_a": 32,
+  "dim_a": 128,
   "dim_b": 256,
-  "concat_dim": 288,
+  "concat_dim": 384,
   "encoder_source": "single_modal_baseline train-only encoders (frozen)",
   "best_params": {
     "n_hidden": 1,
-    "hidden_dim": 32,
-    "dropout": 0.12364323277366746,
-    "lr": 0.0016127704028924125,
-    "weight_decay": 8.121029381018616e-05,
-    "batch_size": 16,
-    "epochs": 107
+    "hidden_dim": 256,
+    "dropout": 0.39465975062275555,
+    "lr": 0.00020980683425395687,
+    "weight_decay": 8.603649675026482e-06,
+    "batch_size": 64,
+    "epochs": 100
   },
-  "optuna_best_val_auroc": 0.7196356275303644,
-  "val_auroc_trainonly": 0.7196356275303644,
-  "test_auroc_trainonly": 0.5978947368421053,
-  "test_auroc_trainval": 0.5947368421052632,
+  "optuna_best_val_auroc": 0.6933198380566802,
+  "val_auroc_trainonly": 0.6933198380566802,
+  "test_auroc_trainonly": 0.5757894736842105,
+  "test_auroc_trainval": 0.628421052631579,
   "test_metrics_trainval": {
-    "auroc": 0.5947368421052632,
-    "accuracy": 0.5555555555555556,
+    "auroc": 0.628421052631579,
+    "accuracy": 0.6349206349206349,
     "confusion_matrix": [
       [
-        24,
-        14
+        21,
+        17
       ],
       [
-        14,
-        11
+        6,
+        19
       ]
     ],
     "class0_prf": [
-      0.631578947368421,
-      0.631578947368421,
-      0.631578947368421
+      0.7777777777777778,
+      0.5526315789473685,
+      0.6461538461538462
     ],
     "class1_prf": [
-      0.44,
-      0.44,
-      0.44
+      0.5277777777777778,
+      0.76,
+      0.6229508196721312
     ]
   }
 }

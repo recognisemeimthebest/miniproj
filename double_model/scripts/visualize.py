@@ -118,7 +118,7 @@ def plot_bar(summary: dict) -> Path:
     ax.set_ylabel("Test AUROC", fontsize=11)
     ax.set_ylim(0.4, 0.8)
     ax.set_title(
-        "Double-model fusion on LJW seed99 test (n=63) — late vs intermediate",
+        "Double-model fusion on shared test split (n=63) — late vs intermediate",
         fontsize=12, fontweight="bold",
     )
     ax.legend(fontsize=8, loc="upper right", ncol=2)

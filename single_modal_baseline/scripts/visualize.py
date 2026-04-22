@@ -82,7 +82,7 @@ def plot_comparison_bar(summary: dict) -> Path:
     ax.set_ylabel("AUROC", fontsize=11)
     ax.set_ylim(0.4, 0.8)
     ax.set_title(
-        "Single-modal AUROC on LJW seed99 split (test n=63)",
+        "Single-modal AUROC on shared split (test n=63)",
         fontsize=12,
         fontweight="bold",
     )

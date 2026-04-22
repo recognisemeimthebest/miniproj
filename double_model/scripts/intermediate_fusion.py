@@ -413,7 +413,7 @@ def main(n_trials: int) -> None:
     summary_path = merge_summary(inter_results)
 
     print("\n" + "=" * 72)
-    print("  Intermediate fusion (frozen encoders + MLP head) on LJW seed99 test (n=63)")
+    print("  Intermediate fusion (frozen encoders + MLP head) on shared test split (n=63)")
     print("=" * 72)
     hdr = f"{'Pair':<10} {'concat':>7} | {'Optuna val':>11} {'test trainonly':>15} {'test trainval':>15}"
     print(hdr); print("-" * len(hdr))

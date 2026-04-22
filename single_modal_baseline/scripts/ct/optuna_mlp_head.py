@@ -20,13 +20,12 @@ Search space (MLP head):
     - label_smoothing: [0.0, 0.2]
     - class_weight: {None, "balanced"}
 
-사용:
-    python src/optuna_mlp_head.py \
-        --ckpt experiments/m1_hosny_iter7b_seed99/best.pt \
-        --features experiments/m1_hosny_iter7b_seed99/features \
-        --seed 99 \
+사용 (repo root에서, 로컬 single_modal_baseline artifacts 에 대해):
+    PYTHONPATH=. python single_modal_baseline/scripts/ct/optuna_mlp_head.py \
+        --ckpt single_modal_baseline/results/ct/best.pt \
+        --features single_modal_baseline/results/ct/features \
         --n-trials 200 --n-jobs 4 \
-        --out experiments/m1_hosny_iter7b_seed99/optuna_mlp
+        --out single_modal_baseline/results/ct/optuna_mlp
 """
 from __future__ import annotations
 

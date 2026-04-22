@@ -1,23 +1,23 @@
 {
-  "ckpt": "experiments\\m1_hosny_iter7b_seed99\\best.pt",
-  "features_dir": "experiments\\m1_hosny_iter7b_seed99\\features",
-  "seed": 99,
+  "ckpt": "single_modal_baseline\\results\\ct\\best.pt",
+  "features_dir": "single_modal_baseline\\results\\ct\\features",
+  "seed": 123,
   "n_trials": 200,
   "scaler": true,
-  "best_val_auroc": 0.6548582995951417,
+  "best_val_auroc": 0.625506072874494,
   "best_params": {
     "n_hidden": 1,
-    "hidden_dim": 32,
-    "dropout": 0.46915818001576876,
-    "use_bn": false,
-    "lr": 0.0030765796652495025,
-    "weight_decay": 3.329025151526907e-06,
-    "epochs": 159,
-    "batch_size": 16,
-    "label_smoothing": 0.04102245812463627,
-    "class_weight": null
+    "hidden_dim": 128,
+    "dropout": 0.319134793188431,
+    "use_bn": true,
+    "lr": 0.000261707642944864,
+    "weight_decay": 6.504168922196356e-05,
+    "epochs": 148,
+    "batch_size": 64,
+    "label_smoothing": 0.0211745369005415,
+    "class_weight": "balanced"
   },
-  "final_val_auroc_trainonly": 0.611336032388664,
-  "final_test_auroc_trainonly": 0.5547368421052632,
-  "final_test_auroc_trainval": 0.6336842105263158
+  "final_val_auroc_trainonly": 0.6194331983805668,
+  "final_test_auroc_trainonly": 0.5536842105263158,
+  "final_test_auroc_trainval": 0.6231578947368421
 }

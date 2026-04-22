@@ -1,10 +1,10 @@
-"""Radiomics single-modal evaluation on the LJW seed99 partition.
+"""Radiomics single-modal evaluation on the shared partition.
 
 Uses the 15 LASSO-selected features from origin/feature/LJY
 (data/radiomics_final_features.csv) and a small MLP classifier.
 
 Pipeline matches eval_clinical.py:
-1. Subset 15 features to the 293/64/63 seed99 partition.
+1. Subset 15 features to the shared 293/64/63 partition.
 2. Optuna (N_TRIALS, default 100) on (train, val) — maximise val AUROC.
 3. Retrain with the best params:
      - trainonly : train on 293, report test AUROC

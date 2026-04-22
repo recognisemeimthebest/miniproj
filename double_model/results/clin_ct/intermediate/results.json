@@ -4,45 +4,45 @@
     "ct"
   ],
   "n_modalities": 2,
-  "dim_a": 32,
+  "dim_a": 128,
   "dim_b": 256,
-  "concat_dim": 288,
+  "concat_dim": 384,
   "encoder_source": "single_modal_baseline train-only encoders (frozen)",
   "best_params": {
-    "n_hidden": 1,
-    "hidden_dim": 256,
-    "dropout": 0.25267071520801987,
-    "lr": 0.001108592608662462,
-    "weight_decay": 4.154492453108906e-06,
-    "batch_size": 64,
-    "epochs": 97
+    "n_hidden": 2,
+    "hidden_dim": 128,
+    "dropout": 0.10703308993535293,
+    "lr": 0.005461876889562638,
+    "weight_decay": 0.0001381553736475964,
+    "batch_size": 16,
+    "epochs": 119
   },
-  "optuna_best_val_auroc": 0.667004048582996,
-  "val_auroc_trainonly": 0.667004048582996,
-  "test_auroc_trainonly": 0.5789473684210527,
-  "test_auroc_trainval": 0.6094736842105264,
+  "optuna_best_val_auroc": 0.5946356275303644,
+  "val_auroc_trainonly": 0.5946356275303644,
+  "test_auroc_trainonly": 0.5647368421052631,
+  "test_auroc_trainval": 0.5905263157894737,
   "test_metrics_trainval": {
-    "auroc": 0.6094736842105264,
-    "accuracy": 0.6031746031746031,
+    "auroc": 0.5905263157894737,
+    "accuracy": 0.5396825396825397,
     "confusion_matrix": [
       [
-        26,
-        12
+        14,
+        24
       ],
       [
-        13,
-        12
+        5,
+        20
       ]
     ],
     "class0_prf": [
-      0.6666666666666666,
-      0.6842105263157895,
-      0.6753246753246753
+      0.7368421052631579,
+      0.3684210526315789,
+      0.49122807017543857
     ],
     "class1_prf": [
-      0.5,
-      0.48,
-      0.4897959183673469
+      0.45454545454545453,
+      0.8,
+      0.5797101449275363
     ]
   }
 }

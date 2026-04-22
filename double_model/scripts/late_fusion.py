@@ -99,19 +99,21 @@ def fuse_pair(a: str, b: str) -> dict:
     }
 
 
+def _load_single_modal_reference() -> dict:
+    """Pull each modality's trainval test AUROC from single_modal_baseline/results/summary.json."""
+    sm = json.load(open(SM_RESULTS / "summary.json"))
+    return {m: sm["modalities"][m]["test_auroc_trainval"] for m in ("clinical", "radiomics", "ct")}
+
+
 def main() -> None:
     summary = {
-        "split": {"train": 293, "val": 64, "test": 63, "source": "LJW seed99"},
+        "split": {"train": 293, "val": 64, "test": 63, "source": "shared 70/15/15 label-stratified split"},
         "method": "late_fusion_equal_weight",
         "source_probs": "single_modal_baseline train+val retrain (headline)",
         "averaging_rules": ["arithmetic", "logit"],
         "threshold": 0.5,
         "pairs": {},
-        "single_modal_reference_test_auroc_trainval": {
-            "clinical": 0.5795,
-            "radiomics": 0.5453,
-            "ct": 0.6337,
-        },
+        "single_modal_reference_test_auroc_trainval": _load_single_modal_reference(),
     }
 
     for key, (a, b) in PAIRS.items():
@@ -122,7 +124,7 @@ def main() -> None:
         json.dump(summary, f, indent=2)
 
     print("=" * 72)
-    print("  Late fusion (equal weights) on LJW seed99 test set (n=63)")
+    print("  Late fusion (equal weights) on shared test set (n=63)")
     print("=" * 72)
     hdr = f"{'Pair':<10} {'modalities':<24} | {'AUROC arith':>12} {'AUROC logit':>12}"
     print(hdr)

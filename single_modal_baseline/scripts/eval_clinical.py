@@ -1,9 +1,10 @@
-"""Clinical single-modal evaluation on the LJW seed99 partition.
+"""Clinical single-modal evaluation on the shared partition.
 
 Pipeline
 --------
 1. Load data/clinical_encoded.csv (copied from preprocessing output).
-2. Subset to the same 293/64/63 PatientIDs used for the CT seed99 experiment.
+2. Subset to the same 293/64/63 PatientIDs used by all three modalities
+   (loaded from results/ct/features/*.npz via common_split).
 3. Optuna (N_TRIALS): tune ClinicalBranch MLP on (train, val) — maximise val AUROC.
 4. Final retrain with the best params:
      - trainonly  : train on 293, report test AUROC

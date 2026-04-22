@@ -3,7 +3,7 @@
     "train": 293,
     "val": 64,
     "test": 63,
-    "source": "LJW seed99"
+    "source": "shared 70/15/15 label-stratified split"
   },
   "method": "late_fusion_equal_weight",
   "source_probs": "single_modal_baseline train+val retrain (headline)",
@@ -25,10 +25,10 @@
       },
       "source_probs": "train+val retrain",
       "arithmetic_mean": {
-        "test_auroc": 0.5652631578947369
+        "test_auroc": 0.5821052631578947
       },
       "logit_mean": {
-        "test_auroc": 0.5673684210526315
+        "test_auroc": 0.5873684210526315
       }
     },
     "clin_ct": {
@@ -43,10 +43,10 @@
       },
       "source_probs": "train+val retrain",
       "arithmetic_mean": {
-        "test_auroc": 0.6273684210526316
+        "test_auroc": 0.6126315789473684
       },
       "logit_mean": {
-        "test_auroc": 0.616842105263158
+        "test_auroc": 0.611578947368421
       }
     },
     "rad_ct": {
@@ -61,17 +61,17 @@
       },
       "source_probs": "train+val retrain",
       "arithmetic_mean": {
-        "test_auroc": 0.5821052631578948
+        "test_auroc": 0.5905263157894737
       },
       "logit_mean": {
-        "test_auroc": 0.551578947368421
+        "test_auroc": 0.5915789473684211
       }
     }
   },
   "single_modal_reference_test_auroc_trainval": {
-    "clinical": 0.5795,
-    "radiomics": 0.5453,
-    "ct": 0.6337
+    "clinical": 0.5536842105263158,
+    "radiomics": 0.5726315789473685,
+    "ct": 0.6231578947368421
   },
   "intermediate_fusion": {
     "method": "frozen_concat_mlp_head",
@@ -85,45 +85,45 @@
           "radiomics"
         ],
         "n_modalities": 2,
-        "dim_a": 32,
+        "dim_a": 128,
         "dim_b": 256,
-        "concat_dim": 288,
+        "concat_dim": 384,
         "encoder_source": "single_modal_baseline train-only encoders (frozen)",
         "best_params": {
           "n_hidden": 1,
-          "hidden_dim": 32,
-          "dropout": 0.12364323277366746,
-          "lr": 0.0016127704028924125,
-          "weight_decay": 8.121029381018616e-05,
-          "batch_size": 16,
-          "epochs": 107
+          "hidden_dim": 256,
+          "dropout": 0.39465975062275555,
+          "lr": 0.00020980683425395687,
+          "weight_decay": 8.603649675026482e-06,
+          "batch_size": 64,
+          "epochs": 100
         },
-        "optuna_best_val_auroc": 0.7196356275303644,
-        "val_auroc_trainonly": 0.7196356275303644,
-        "test_auroc_trainonly": 0.5978947368421053,
-        "test_auroc_trainval": 0.5947368421052632,
+        "optuna_best_val_auroc": 0.6933198380566802,
+        "val_auroc_trainonly": 0.6933198380566802,
+        "test_auroc_trainonly": 0.5757894736842105,
+        "test_auroc_trainval": 0.628421052631579,
         "test_metrics_trainval": {
-          "auroc": 0.5947368421052632,
-          "accuracy": 0.5555555555555556,
+          "auroc": 0.628421052631579,
+          "accuracy": 0.6349206349206349,
           "confusion_matrix": [
             [
-              24,
-              14
+              21,
+              17
             ],
             [
-              14,
-              11
+              6,
+              19
             ]
           ],
           "class0_prf": [
-            0.631578947368421,
-            0.631578947368421,
-            0.631578947368421
+            0.7777777777777778,
+            0.5526315789473685,
+            0.6461538461538462
           ],
           "class1_prf": [
-            0.44,
-            0.44,
-            0.44
+            0.5277777777777778,
+            0.76,
+            0.6229508196721312
           ]
         }
       },
@@ -133,45 +133,45 @@
           "ct"
         ],
         "n_modalities": 2,
-        "dim_a": 32,
+        "dim_a": 128,
         "dim_b": 256,
-        "concat_dim": 288,
+        "concat_dim": 384,
         "encoder_source": "single_modal_baseline train-only encoders (frozen)",
         "best_params": {
-          "n_hidden": 1,
-          "hidden_dim": 256,
-          "dropout": 0.25267071520801987,
-          "lr": 0.001108592608662462,
-          "weight_decay": 4.154492453108906e-06,
-          "batch_size": 64,
-          "epochs": 97
+          "n_hidden": 2,
+          "hidden_dim": 128,
+          "dropout": 0.10703308993535293,
+          "lr": 0.005461876889562638,
+          "weight_decay": 0.0001381553736475964,
+          "batch_size": 16,
+          "epochs": 119
         },
-        "optuna_best_val_auroc": 0.667004048582996,
-        "val_auroc_trainonly": 0.667004048582996,
-        "test_auroc_trainonly": 0.5789473684210527,
-        "test_auroc_trainval": 0.6094736842105264,
+        "optuna_best_val_auroc": 0.5946356275303644,
+        "val_auroc_trainonly": 0.5946356275303644,
+        "test_auroc_trainonly": 0.5647368421052631,
+        "test_auroc_trainval": 0.5905263157894737,
         "test_metrics_trainval": {
-          "auroc": 0.6094736842105264,
-          "accuracy": 0.6031746031746031,
+          "auroc": 0.5905263157894737,
+          "accuracy": 0.5396825396825397,
           "confusion_matrix": [
             [
-              26,
-              12
+              14,
+              24
             ],
             [
-              13,
-              12
+              5,
+              20
             ]
           ],
           "class0_prf": [
-            0.6666666666666666,
-            0.6842105263157895,
-            0.6753246753246753
+            0.7368421052631579,
+            0.3684210526315789,
+            0.49122807017543857
           ],
           "class1_prf": [
-            0.5,
-            0.48,
-            0.4897959183673469
+            0.45454545454545453,
+            0.8,
+            0.5797101449275363
           ]
         }
       },
@@ -186,40 +186,40 @@
         "concat_dim": 512,
         "encoder_source": "single_modal_baseline train-only encoders (frozen)",
         "best_params": {
-          "n_hidden": 1,
-          "hidden_dim": 64,
-          "dropout": 0.27883614333296614,
-          "lr": 0.005784339175054577,
-          "weight_decay": 1.0099165713146805e-06,
+          "n_hidden": 2,
+          "hidden_dim": 256,
+          "dropout": 0.11503371117405088,
+          "lr": 0.009652516397736188,
+          "weight_decay": 0.00022916490086431778,
           "batch_size": 16,
-          "epochs": 100
+          "epochs": 119
         },
-        "optuna_best_val_auroc": 0.757085020242915,
-        "val_auroc_trainonly": 0.757085020242915,
-        "test_auroc_trainonly": 0.5821052631578947,
-        "test_auroc_trainval": 0.61,
+        "optuna_best_val_auroc": 0.6998987854251012,
+        "val_auroc_trainonly": 0.6998987854251012,
+        "test_auroc_trainonly": 0.5768421052631579,
+        "test_auroc_trainval": 0.5,
         "test_metrics_trainval": {
-          "auroc": 0.61,
-          "accuracy": 0.5714285714285714,
+          "auroc": 0.5,
+          "accuracy": 0.3968253968253968,
           "confusion_matrix": [
             [
-              18,
-              20
+              0,
+              38
             ],
             [
-              7,
-              18
+              0,
+              25
             ]
           ],
           "class0_prf": [
-            0.72,
-            0.47368421052631576,
-            0.5714285714285714
+            0.0,
+            0.0,
+            0.0
           ],
           "class1_prf": [
-            0.47368421052631576,
-            0.72,
-            0.5714285714285714
+            0.3968253968253968,
+            1.0,
+            0.5681818181818182
           ]
         }
       }

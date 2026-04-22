@@ -3,60 +3,60 @@
     "train": 293,
     "val": 64,
     "test": 63,
-    "source": "LJW seed99"
+    "source": "shared 70/15/15 label-stratified split"
   },
   "modalities": {
     "clinical": {
       "input_dim": 11,
       "best_params": {
-        "hidden_dim": 256,
-        "embed_dim": 32,
-        "dropout": 0.19179259076908656,
-        "lr": 0.007657130105893458,
+        "hidden_dim": 64,
+        "embed_dim": 128,
+        "dropout": 0.4634358981021112,
+        "lr": 0.00025122772429919866,
         "batch_size": 16,
-        "weight_decay": 1.464185316807499e-05,
-        "epochs": 97
+        "weight_decay": 5.694396390009894e-05,
+        "epochs": 81
       },
-      "optuna_best_val_auroc": 0.6568825910931173,
-      "val_auroc_trainonly": 0.6568825910931173,
-      "test_auroc_trainonly": 0.5484210526315789,
-      "test_auroc_trainval": 0.5794736842105263
+      "optuna_best_val_auroc": 0.6821862348178138,
+      "val_auroc_trainonly": 0.6821862348178138,
+      "test_auroc_trainonly": 0.5589473684210526,
+      "test_auroc_trainval": 0.5536842105263158
     },
     "radiomics": {
       "input_dim": 15,
       "best_params": {
         "hidden_dim": 128,
         "embed_dim": 256,
-        "dropout": 0.24914615819050775,
-        "lr": 0.005511842917194678,
-        "weight_decay": 4.099568074182095e-06,
+        "dropout": 0.1649815662442774,
+        "lr": 0.00020287303076791402,
+        "weight_decay": 3.819219803227176e-06,
         "batch_size": 16,
-        "epochs": 54
+        "epochs": 132
       },
-      "optuna_best_val_auroc": 0.72165991902834,
-      "val_auroc_trainonly": 0.72165991902834,
-      "test_auroc_trainonly": 0.6126315789473684,
-      "test_auroc_trainval": 0.5452631578947369
+      "optuna_best_val_auroc": 0.7246963562753036,
+      "val_auroc_trainonly": 0.7246963562753036,
+      "test_auroc_trainonly": 0.6094736842105263,
+      "test_auroc_trainval": 0.5726315789473685
     },
     "ct": {
       "input_dim": 256,
       "best_params": {
         "n_hidden": 1,
-        "hidden_dim": 32,
-        "dropout": 0.46915818001576876,
-        "use_bn": false,
-        "lr": 0.0030765796652495025,
-        "weight_decay": 3.329025151526907e-06,
-        "epochs": 159,
-        "batch_size": 16,
-        "label_smoothing": 0.04102245812463627,
-        "class_weight": null
+        "hidden_dim": 128,
+        "dropout": 0.319134793188431,
+        "use_bn": true,
+        "lr": 0.000261707642944864,
+        "weight_decay": 6.504168922196356e-05,
+        "epochs": 148,
+        "batch_size": 64,
+        "label_smoothing": 0.0211745369005415,
+        "class_weight": "balanced"
       },
-      "optuna_best_val_auroc": 0.6548582995951417,
-      "val_auroc_trainonly": 0.611336032388664,
-      "test_auroc_trainonly": 0.5547368421052632,
-      "test_auroc_trainval": 0.6336842105263158,
-      "note": "Feature input = 256-dim from LJW seed99 3D CNN encoder (best.pt)"
+      "optuna_best_val_auroc": 0.625506072874494,
+      "val_auroc_trainonly": 0.6194331983805668,
+      "test_auroc_trainonly": 0.5536842105263158,
+      "test_auroc_trainval": 0.6231578947368421,
+      "note": "Feature input = 256-dim from frozen Hosny 3D CNN encoder (best.pt)"
     }
   }
 }

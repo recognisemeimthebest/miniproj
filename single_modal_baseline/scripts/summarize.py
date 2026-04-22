@@ -1,11 +1,10 @@
 """Aggregate single-modal results (clinical / radiomics / CT) into one summary.
 
 - Clinical + radiomics results are read from their respective results.json files.
-- CT numbers come from results/ct/optuna_mlp/optuna_mlp_summary.json (local copy
-  of the LJW seed99 MLP-head Optuna search).
+- CT numbers come from results/ct/optuna_mlp/optuna_mlp_summary.json (MLP-head
+  Optuna search on top of the frozen 3D-CNN encoder).
 
-The headline metric is the "train+val" retrain test AUROC (matches the CT MLP-head
-'final_test_auroc_trainval' used as the reference point: 0.6337).
+The headline metric is the "train+val" retrain test AUROC.
 """
 from __future__ import annotations
 
@@ -28,7 +27,7 @@ def main() -> None:
     ct = _load(CT_SUM)
 
     summary = {
-        "split": {"train": 293, "val": 64, "test": 63, "source": "LJW seed99"},
+        "split": {"train": 293, "val": 64, "test": 63, "source": "shared 70/15/15 label-stratified split"},
         "modalities": {
             "clinical": {
                 "input_dim": cln["input_dim"],
@@ -53,7 +52,7 @@ def main() -> None:
                 "val_auroc_trainonly": ct["final_val_auroc_trainonly"],
                 "test_auroc_trainonly": ct["final_test_auroc_trainonly"],
                 "test_auroc_trainval": ct["final_test_auroc_trainval"],
-                "note": "Feature input = 256-dim from LJW seed99 3D CNN encoder (best.pt)",
+                "note": "Feature input = 256-dim from frozen Hosny 3D CNN encoder (best.pt)",
             },
         },
     }
@@ -64,7 +63,7 @@ def main() -> None:
         json.dump(summary, f, indent=2)
 
     print("=" * 68)
-    print("  Single-modal comparison on LJW seed99 split (train=293, val=64, test=63)")
+    print("  Single-modal comparison on shared split (train=293, val=64, test=63)")
     print("=" * 68)
     hdr = f"{'Modality':<10} {'input':>6} | {'val(OptMax)':>12} {'test trainonly':>15} {'test trainval':>15}"
     print(hdr)

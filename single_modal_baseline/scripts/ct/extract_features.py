@@ -3,11 +3,11 @@
 iter 7b checkpoint 로드 → forward 중간 GAP 출력 (B, 256) 저장.
 TTA (L-R flip) 평균 선택 가능.
 
-사용:
-    python src/extract_features.py \
-        --ckpt experiments/m1_hosny_iter7b_seed99/best.pt \
-        --seed 99 \
-        --out experiments/m1_hosny_iter7b_seed99/features \
+사용 (repo root에서; 원본 파이프라인 seed 와 동일한 값을 --seed 로 전달):
+    PYTHONPATH=. python single_modal_baseline/scripts/ct/extract_features.py \
+        --ckpt <3D-CNN best.pt> \
+        --seed <split seed> \
+        --out <features out dir> \
         --tta
 출력:
     <out>/train.npz, val.npz, test.npz
