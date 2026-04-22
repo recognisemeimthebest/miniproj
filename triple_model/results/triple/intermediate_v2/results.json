@@ -1,0 +1,56 @@
+{
+  "modalities": [
+    "clinical",
+    "radiomics",
+    "ct"
+  ],
+  "n_modalities": 3,
+  "dims": {
+    "clinical": 128,
+    "radiomics": 256,
+    "ct": 256
+  },
+  "concat_dim": 640,
+  "encoder_source": "single_modal_baseline train-only encoders (frozen)",
+  "method": "CV_Optuna + BatchNorm1d(input) + modality_dropout",
+  "modality_dropout_p": 0.3,
+  "cv_folds": 5,
+  "n_trials": 40,
+  "best_params": {
+    "n_hidden": 1,
+    "hidden_dim": 128,
+    "dropout": 0.2772412132142409,
+    "lr": 0.0009580311583667789,
+    "weight_decay": 0.00037651993819905774,
+    "batch_size": 16,
+    "epochs": 95
+  },
+  "optuna_best_cv_auroc": 0.6905468362164433,
+  "val_auroc_trainonly": 0.6649797570850203,
+  "test_auroc_trainonly": 0.6294736842105263,
+  "test_auroc_trainval": 0.5547368421052632,
+  "test_metrics_trainval": {
+    "auroc": 0.5547368421052632,
+    "accuracy": 0.5555555555555556,
+    "confusion_matrix": [
+      [
+        18,
+        20
+      ],
+      [
+        8,
+        17
+      ]
+    ],
+    "class0_prf": [
+      0.6923076923076923,
+      0.47368421052631576,
+      0.5625
+    ],
+    "class1_prf": [
+      0.4594594594594595,
+      0.68,
+      0.5483870967741935
+    ]
+  }
+}

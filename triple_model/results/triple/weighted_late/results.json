@@ -1,0 +1,34 @@
+{
+  "modalities": [
+    "clinical",
+    "radiomics",
+    "ct"
+  ],
+  "method": "weighted_late_fusion_simplex_grid",
+  "grid_step": 0.05,
+  "grid_size": 231,
+  "val_n": 64,
+  "single_modal_val_auroc": {
+    "clinical": 0.6821862348178138,
+    "radiomics": 0.7246963562753036,
+    "ct": 0.6194331983805668
+  },
+  "arithmetic": {
+    "w": {
+      "clinical": 0.35000000000000003,
+      "radiomics": 0.5,
+      "ct": 0.15000000000000002
+    },
+    "val_auroc": 0.7601214574898786,
+    "test_auroc_trainval": 0.5842105263157895
+  },
+  "logit": {
+    "w": {
+      "clinical": 0.35000000000000003,
+      "radiomics": 0.5,
+      "ct": 0.15000000000000002
+    },
+    "val_auroc": 0.7601214574898786,
+    "test_auroc_trainval": 0.5852631578947369
+  }
+}

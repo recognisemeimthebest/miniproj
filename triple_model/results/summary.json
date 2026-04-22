@@ -111,5 +111,168 @@
         ]
       }
     }
+  },
+  "weighted_late_fusion": {
+    "modalities": [
+      "clinical",
+      "radiomics",
+      "ct"
+    ],
+    "method": "weighted_late_fusion_simplex_grid",
+    "grid_step": 0.05,
+    "grid_size": 231,
+    "val_n": 64,
+    "single_modal_val_auroc": {
+      "clinical": 0.6821862348178138,
+      "radiomics": 0.7246963562753036,
+      "ct": 0.6194331983805668
+    },
+    "arithmetic": {
+      "w": {
+        "clinical": 0.35000000000000003,
+        "radiomics": 0.5,
+        "ct": 0.15000000000000002
+      },
+      "val_auroc": 0.7601214574898786,
+      "test_auroc_trainval": 0.5842105263157895
+    },
+    "logit": {
+      "w": {
+        "clinical": 0.35000000000000003,
+        "radiomics": 0.5,
+        "ct": 0.15000000000000002
+      },
+      "val_auroc": 0.7601214574898786,
+      "test_auroc_trainval": 0.5852631578947369
+    }
+  },
+  "linear_fusion": {
+    "modalities": [
+      "clinical",
+      "radiomics",
+      "ct"
+    ],
+    "concat_dim": 640,
+    "encoder_source": "single_modal_baseline train-only encoders (frozen)",
+    "method": "Linear head on 640-dim concat (L2 + ElasticNet)",
+    "threshold": 0.5,
+    "logreg_l2": {
+      "C_trainonly": 0.01,
+      "C_trainval": 0.001,
+      "val_auroc_trainonly": 0.5951417004048584,
+      "test_auroc_trainonly": 0.6810526315789475,
+      "test_auroc_trainval": 0.6589473684210526,
+      "test_metrics_trainval": {
+        "auroc": 0.6589473684210526,
+        "accuracy": 0.6507936507936508,
+        "confusion_matrix": [
+          [
+            24,
+            14
+          ],
+          [
+            8,
+            17
+          ]
+        ],
+        "class0_prf": [
+          0.75,
+          0.631578947368421,
+          0.6857142857142857
+        ],
+        "class1_prf": [
+          0.5483870967741935,
+          0.68,
+          0.6071428571428571
+        ]
+      }
+    },
+    "elasticnet": {
+      "best_alpha": 0.0001,
+      "best_l1_ratio": 0.1,
+      "val_auroc_trainonly": 0.6422064777327936,
+      "test_auroc_trainonly": 0.6563157894736843,
+      "test_auroc_trainval": 0.5668421052631579,
+      "test_metrics_trainval": {
+        "auroc": 0.5668421052631579,
+        "accuracy": 0.5714285714285714,
+        "confusion_matrix": [
+          [
+            18,
+            20
+          ],
+          [
+            7,
+            18
+          ]
+        ],
+        "class0_prf": [
+          0.72,
+          0.47368421052631576,
+          0.5714285714285714
+        ],
+        "class1_prf": [
+          0.47368421052631576,
+          0.72,
+          0.5714285714285714
+        ]
+      }
+    }
+  },
+  "intermediate_fusion_v2": {
+    "modalities": [
+      "clinical",
+      "radiomics",
+      "ct"
+    ],
+    "n_modalities": 3,
+    "dims": {
+      "clinical": 128,
+      "radiomics": 256,
+      "ct": 256
+    },
+    "concat_dim": 640,
+    "encoder_source": "single_modal_baseline train-only encoders (frozen)",
+    "method": "CV_Optuna + BatchNorm1d(input) + modality_dropout",
+    "modality_dropout_p": 0.3,
+    "cv_folds": 5,
+    "n_trials": 40,
+    "best_params": {
+      "n_hidden": 1,
+      "hidden_dim": 128,
+      "dropout": 0.2772412132142409,
+      "lr": 0.0009580311583667789,
+      "weight_decay": 0.00037651993819905774,
+      "batch_size": 16,
+      "epochs": 95
+    },
+    "optuna_best_cv_auroc": 0.6905468362164433,
+    "val_auroc_trainonly": 0.6649797570850203,
+    "test_auroc_trainonly": 0.6294736842105263,
+    "test_auroc_trainval": 0.5547368421052632,
+    "test_metrics_trainval": {
+      "auroc": 0.5547368421052632,
+      "accuracy": 0.5555555555555556,
+      "confusion_matrix": [
+        [
+          18,
+          20
+        ],
+        [
+          8,
+          17
+        ]
+      ],
+      "class0_prf": [
+        0.6923076923076923,
+        0.47368421052631576,
+        0.5625
+      ],
+      "class1_prf": [
+        0.4594594594594595,
+        0.68,
+        0.5483870967741935
+      ]
+    }
   }
 }

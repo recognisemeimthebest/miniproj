@@ -1,0 +1,73 @@
+{
+  "modalities": [
+    "clinical",
+    "radiomics",
+    "ct"
+  ],
+  "concat_dim": 640,
+  "encoder_source": "single_modal_baseline train-only encoders (frozen)",
+  "method": "Linear head on 640-dim concat (L2 + ElasticNet)",
+  "threshold": 0.5,
+  "logreg_l2": {
+    "C_trainonly": 0.01,
+    "C_trainval": 0.001,
+    "val_auroc_trainonly": 0.5951417004048584,
+    "test_auroc_trainonly": 0.6810526315789475,
+    "test_auroc_trainval": 0.6589473684210526,
+    "test_metrics_trainval": {
+      "auroc": 0.6589473684210526,
+      "accuracy": 0.6507936507936508,
+      "confusion_matrix": [
+        [
+          24,
+          14
+        ],
+        [
+          8,
+          17
+        ]
+      ],
+      "class0_prf": [
+        0.75,
+        0.631578947368421,
+        0.6857142857142857
+      ],
+      "class1_prf": [
+        0.5483870967741935,
+        0.68,
+        0.6071428571428571
+      ]
+    }
+  },
+  "elasticnet": {
+    "best_alpha": 0.0001,
+    "best_l1_ratio": 0.1,
+    "val_auroc_trainonly": 0.6422064777327936,
+    "test_auroc_trainonly": 0.6563157894736843,
+    "test_auroc_trainval": 0.5668421052631579,
+    "test_metrics_trainval": {
+      "auroc": 0.5668421052631579,
+      "accuracy": 0.5714285714285714,
+      "confusion_matrix": [
+        [
+          18,
+          20
+        ],
+        [
+          7,
+          18
+        ]
+      ],
+      "class0_prf": [
+        0.72,
+        0.47368421052631576,
+        0.5714285714285714
+      ],
+      "class1_prf": [
+        0.47368421052631576,
+        0.72,
+        0.5714285714285714
+      ]
+    }
+  }
+}
