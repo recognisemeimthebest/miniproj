@@ -1,0 +1,115 @@
+{
+  "split": {
+    "train": 293,
+    "val": 64,
+    "test": 63,
+    "source": "shared 70/15/15 label-stratified split"
+  },
+  "method": "late_fusion_equal_weight",
+  "source_probs": "single_modal_baseline train+val retrain (headline)",
+  "averaging_rules": [
+    "arithmetic",
+    "logit"
+  ],
+  "threshold": 0.5,
+  "triple": {
+    "modalities": [
+      "clinical",
+      "radiomics",
+      "ct"
+    ],
+    "n_modalities": 3,
+    "weights": {
+      "clinical": 0.3333333333333333,
+      "radiomics": 0.3333333333333333,
+      "ct": 0.3333333333333333
+    },
+    "source_probs": "train+val retrain",
+    "arithmetic_mean": {
+      "test_auroc": 0.5915789473684211
+    },
+    "logit_mean": {
+      "test_auroc": 0.6073684210526316
+    }
+  },
+  "single_modal_reference_test_auroc_trainval": {
+    "clinical": 0.5536842105263158,
+    "radiomics": 0.5726315789473685,
+    "ct": 0.6231578947368421
+  },
+  "double_reference": {
+    "clin_rad": {
+      "late_arith": 0.5821052631578947,
+      "late_logit": 0.5873684210526315,
+      "intermediate": 0.628421052631579
+    },
+    "clin_ct": {
+      "late_arith": 0.6126315789473684,
+      "late_logit": 0.611578947368421,
+      "intermediate": 0.5905263157894737
+    },
+    "rad_ct": {
+      "late_arith": 0.5905263157894737,
+      "late_logit": 0.5915789473684211,
+      "intermediate": 0.5
+    }
+  },
+  "intermediate_fusion": {
+    "method": "frozen_concat_mlp_head",
+    "encoder_source": "single_modal_baseline train-only encoders (frozen)",
+    "head_optuna_trials": 30,
+    "threshold": 0.5,
+    "triple": {
+      "modalities": [
+        "clinical",
+        "radiomics",
+        "ct"
+      ],
+      "n_modalities": 3,
+      "dims": {
+        "clinical": 128,
+        "radiomics": 256,
+        "ct": 256
+      },
+      "concat_dim": 640,
+      "encoder_source": "single_modal_baseline train-only encoders (frozen)",
+      "best_params": {
+        "n_hidden": 1,
+        "hidden_dim": 64,
+        "dropout": 0.36978450149592096,
+        "lr": 0.009013644095296834,
+        "weight_decay": 0.00019818408756206227,
+        "batch_size": 16,
+        "epochs": 31
+      },
+      "optuna_best_val_auroc": 0.6558704453441295,
+      "val_auroc_trainonly": 0.6558704453441295,
+      "test_auroc_trainonly": 0.6231578947368421,
+      "test_auroc_trainval": 0.5447368421052631,
+      "test_metrics_trainval": {
+        "auroc": 0.5447368421052631,
+        "accuracy": 0.5555555555555556,
+        "confusion_matrix": [
+          [
+            30,
+            8
+          ],
+          [
+            20,
+            5
+          ]
+        ],
+        "class0_prf": [
+          0.6,
+          0.7894736842105263,
+          0.6818181818181818
+        ],
+        "class1_prf": [
+          0.38461538461538464,
+          0.2,
+          0.2631578947368421
+        ]
+      }
+    }
+  }
+}

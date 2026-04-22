@@ -68,3 +68,5 @@ Thumbs.db
 !single_modal_baseline/**
 !double_model/
 !double_model/**
+!triple_model/
+!triple_model/**
