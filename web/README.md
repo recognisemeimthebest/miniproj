@@ -33,8 +33,9 @@ streamlit run app.py
 - 고위험/저위험 분류
 - 모달리티별 기여도 파이차트
 - 모달리티별 AUROC 표
+- Grad-CAM 분석 결과 (IoU @0.25, IoU @0.50, Pointing Game, GTV Voxels)
 
-### 2. 모달리티 기여도 탭
+### 2. 모달리티 기여도 & SHAP 탭
 - Modality Ablation Study 결과
 - M1(Clinical) / M2(CT) / M3(Rad+Clin) / M4(Fusion) AUROC 비교
 - SHAP 특징 기여도 분석 (라디오믹스 15개 + 임상 변수)
@@ -46,12 +47,12 @@ streamlit run app.py
 
 ## 파일 구조
 web/
-├── app.py                    # 메인 Streamlit 앱
-├── README.md                 # 웹 구현 설명
+├── app.py                        # 메인 Streamlit 앱
+├── README.md                     # 웹 구현 설명
 ├── checkpoints/
 │   └── triple_linear_l2_best.pt  # Fusion 모델
 └── embeddings/
-├── ct_train/val/test.npz     # CT 임베딩
+├── ct_train/val/test.npz         # CT 임베딩
 ├── radiomics_train/val/test.npz  # 라디오믹스 임베딩
 └── clinical_train/val/test.npz   # 임상 임베딩
 
