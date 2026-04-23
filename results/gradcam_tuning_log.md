@@ -171,11 +171,11 @@
 3. **Depth–peak 트레이드오프**: 얕은 layer(40³) → area 커버리지↑, peak noise↑. 깊은 layer(10³) → peak stable but 공간 coarse. block[2] (20³) 이 sweet spot.
 4. **Lung/tissue mask가 random 상회의 가장 확실한 레버**: 저성능 모델(0.60 AUROC)의 CAM은 공기 영역에 spurious peak을 만들기 쉬움. tissue-only 제약이 interpretability와 metric 양쪽에 가장 효과적.
 
-**권장 사용 설정 (final)**:
+**Shipped 설정**: 최종 배포용 오버레이는 **iter 0** (GradCAM, `features[3].act`, relu_minmax)로 생성. 이유: 딥러닝 baseline으로서 단일 blob이 가장 깔끔하게 GTV 중심에 모이며, 시각적 showcase에 적합. iter 5는 metric 상 최고였으나 (IoU 양 지표 random 상회), 배포는 하지 않고 본 튜닝 로그의 정량적 ceiling 기록으로만 유지.
+
 ```bash
-python src/explain/gradcam_ct.py --all-test \
-  --cam-method layercam --target-block 2 --post relu_minmax --lung-mask \
-  --out-nii results/gradcam/final --out-png figures/gradcam_overlays
+PYTHONPATH=. python results/gradcam_iter0.py --all-test
+# -> figures/gradcam_overlays_iter0/ (n=63) + results/gradcam_iou.csv (iter0 수치)
 ```
 
 **한계 및 남은 과제**:
