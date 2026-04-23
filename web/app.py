@@ -5,6 +5,9 @@ import torch.nn as nn
 import plotly.graph_objects as go
 import pandas as pd
 import os
+import shap
+import matplotlib.pyplot as plt
+from io import BytesIO
 
 # ── 페이지 설정 ───────────────────────────────────────
 st.set_page_config(
@@ -71,6 +74,13 @@ def load_embeddings():
 def get_array(npz):
     return npz[list(npz.keys())[0]]
 
+# 아래 함수 추가
+def get_patient_idx(npz, patient_id):
+    pids = npz["pids"]
+    matches = np.where(pids == patient_id)[0]
+    return matches[0] if len(matches) > 0 else None
+
+
 # ── 사이드바 ──────────────────────────────────────────
 with st.sidebar:
     st.markdown("""
@@ -83,7 +93,7 @@ with st.sidebar:
     <p style='color:#7ab3d4; font-size:11px; font-weight:600; letter-spacing:1px'>PATIENT INFORMATION</p>
     """, unsafe_allow_html=True)
 
-    patient_id = st.text_input("Patient ID", value="LUNG1-001")
+    patient_id = st.text_input("Patient ID", value="LUNG1-004")
     age        = st.slider("나이 (Age)", 30, 90, 65)
     gender     = st.radio("성별 (Gender)", ["Male", "Female"], horizontal=True)
     stage      = st.selectbox("TNM Stage", ["I", "II", "IIIa", "IIIb", "IV"])
@@ -135,9 +145,15 @@ with tab1:
             model = load_model()
             ct_emb, radio_emb, clin_emb = load_embeddings()
 
-            ct_t    = torch.tensor(get_array(ct_emb)[[0]],    dtype=torch.float32)
-            radio_t = torch.tensor(get_array(radio_emb)[[0]], dtype=torch.float32)
-            clin_t  = torch.tensor(get_array(clin_emb)[[0]],  dtype=torch.float32)
+            idx = get_patient_idx(ct_emb, patient_id)
+
+            if idx is None:
+                st.warning(f"⚠️ {patient_id} 는 test 데이터에 없습니다. 아래 환자 중 선택해주세요: {', '.join(ct_emb['pids'][:5])}...")
+                st.stop()
+
+            ct_t    = torch.tensor(ct_emb["emb"][[idx]],    dtype=torch.float32)
+            radio_t = torch.tensor(radio_emb["emb"][[idx]], dtype=torch.float32)
+            clin_t  = torch.tensor(clin_emb["emb"][[idx]],  dtype=torch.float32)
 
             x = torch.cat([clin_t, radio_t, ct_t], dim=1)
             with torch.no_grad():
@@ -238,7 +254,7 @@ with tab1:
 # TAB 2: 모달리티 기여도
 # ══════════════════════════════════════════════════════
 with tab2:
-    st.markdown("### Modality Ablation Study")
+    st.markdown("### 📊 Modality Ablation Study")
 
     col1, col2, col3, col4 = st.columns(4)
     metrics = [
@@ -271,6 +287,77 @@ with tab2:
     )
     st.plotly_chart(fig, use_container_width=True)
 
+    # ── SHAP ──────────────────────────────────────
+    st.markdown("---")
+    st.markdown("### 🔍 SHAP - 특징별 기여도 분석")
+    st.markdown("라디오믹스 + 임상 데이터 기반 예측 기여도")
+
+    try:
+        from sklearn.ensemble import GradientBoostingClassifier
+        from sklearn.preprocessing import StandardScaler
+
+        # 데이터 로드
+        df_features = pd.read_csv(r"C:\Users\301-13\radiomics_project\features\final_features.csv")
+        df_clinical  = pd.read_csv(r"C:\Users\301-13\radiomics_project\lung1_clinical_encoded.csv")
+
+        clin_cols = ["age", "clinical.T.Stage", "Clinical.N.Stage",
+                     "Clinical.M.Stage", "Overall.Stage", "gender",
+                     "hist_adenocarcinoma", "hist_large cell", "hist_nos",
+                     "hist_squamous cell carcinoma", "hist_unknown"]
+
+        df = pd.merge(df_features, df_clinical[["PatientID", "label_2yr"] + clin_cols],
+                      left_on="patient_id", right_on="PatientID", how="inner")
+        df = df.dropna(subset=["label_2yr"])
+
+        radio_cols = [c for c in df_features.columns if c != "patient_id"]
+        all_cols   = radio_cols + clin_cols
+
+        X = df[all_cols].fillna(0)
+        y = df["label_2yr"]
+
+        scaler  = StandardScaler()
+        X_scaled = scaler.fit_transform(X)
+
+        # GBM 학습
+        gbm = GradientBoostingClassifier(
+            n_estimators=200, max_depth=3,
+            learning_rate=0.05, random_state=42
+        )
+        gbm.fit(X_scaled, y)
+
+        # SHAP 계산
+        explainer   = shap.TreeExplainer(gbm)
+        shap_values = explainer.shap_values(X_scaled)
+
+        # SHAP Summary Plot
+        fig_shap, ax = plt.subplots(figsize=(10, 8))
+        shap.summary_plot(
+            shap_values, X,
+            feature_names=all_cols,
+            max_display=20,
+            show=False,
+            plot_type="bar"
+        )
+        buf = BytesIO()
+        plt.savefig(buf, format="png", bbox_inches="tight", dpi=150)
+        buf.seek(0)
+        st.image(buf, use_container_width=True)
+        plt.close()
+
+        # 상위 10개 특징 표
+        st.markdown("#### 📋 상위 10개 주요 특징")
+        shap_importance = pd.DataFrame({
+            "특징": all_cols,
+            "SHAP 중요도": np.abs(shap_values).mean(axis=0)
+        }).sort_values("SHAP 중요도", ascending=False).head(10)
+
+        shap_importance["구분"] = shap_importance["특징"].apply(
+            lambda x: "🟠 Radiomics" if x in radio_cols else "🟢 Clinical"
+        )
+        st.dataframe(shap_importance, use_container_width=True)
+
+    except Exception as e:
+        st.error(f"SHAP 오류: {e}")
 # ══════════════════════════════════════════════════════
 # TAB 3: 모델 성능
 # ══════════════════════════════════════════════════════
